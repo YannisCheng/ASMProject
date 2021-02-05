@@ -35,7 +35,10 @@ public class ClassComputeCostAdapter extends ClassVisitor {
         //super.visitMethod(access, name, desc, signature, exceptions);
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
         if (mv != null && !isInterface && !name.equals("<init>")) {
-            mv = new MethodCostAdapter(mv);
+            // 第1版，直接使用MethodVisitor进行处理
+            //mv = new MethodCostAdapter(mv);
+            // 第2版，直接使用AdviceAdapter进行处理
+            mv = new CostTimeAdviceAdapter(mv,access,name,desc);
         }
         return mv;
     }
