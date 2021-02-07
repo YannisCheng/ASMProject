@@ -1,4 +1,4 @@
-package com.cwj.asm.cost_simple;
+package com.cwj.asm.method_type.cost_simple;
 
 import org.objectweb.asm.MethodVisitor;
 
@@ -20,7 +20,7 @@ public class MethodCostAdapter extends MethodVisitor {
     public void visitCode() {
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 1);
-        mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/cost_simple/ComputeTargetCost", "startTime", "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/method_type/cost_simple/ComputeTargetCost", "startTime", "(Ljava/lang/String;)V", false);
     }
 
 
@@ -28,7 +28,7 @@ public class MethodCostAdapter extends MethodVisitor {
     public void visitInsn(int opcode) {
         if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
             mv.visitVarInsn(ALOAD, 1);
-            mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/cost_simple/ComputeTargetCost", "stopTime", "(Ljava/lang/String;)V", false);
+            mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/method_type/cost_simple/ComputeTargetCost", "stopTime", "(Ljava/lang/String;)V", false);
         }
         mv.visitInsn(opcode);
     }

@@ -1,12 +1,4 @@
-package com.cwj.asm.cost_simple;
-
-import com.cwj.asm.class_loader.MyClassLoader;
-import org.objectweb.asm.MethodVisitor;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import static org.objectweb.asm.Opcodes.RETURN;
+package com.cwj.asm.method_type.cost_simple;
 
 /**
  * TargetTest  要计算耗时的目标类
@@ -20,9 +12,9 @@ public class TargetTest {
         // 注意：在进行测试时，不能直接使用"ComputeTargetCost"。
         // 因为这样会导致找不到ComputeTargetCost类。
         // 应该以"全限定名称"的方式进行方法的调用。
-        //com.cwj.asm.cost_simple.ComputeTargetCost.startTime(name);
+        //com.cwj.asm.method_type.cost_simple.ComputeTargetCost.startTime(name);
         Thread.sleep(200);
-        //com.cwj.asm.cost_simple.ComputeTargetCost.stopTime(name);
+        //com.cwj.asm.method_type.cost_simple.ComputeTargetCost.stopTime(name);
     }
 }
 /*

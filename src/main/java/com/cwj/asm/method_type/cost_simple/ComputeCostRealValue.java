@@ -1,4 +1,4 @@
-package com.cwj.asm.cost_simple;
+package com.cwj.asm.method_type.cost_simple;
 
 /**
  * ComputeCostRealValue  具体记录方法开始、结束时间点的类

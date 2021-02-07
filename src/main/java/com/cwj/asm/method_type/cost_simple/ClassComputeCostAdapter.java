@@ -1,4 +1,4 @@
-package com.cwj.asm.cost_simple;
+package com.cwj.asm.method_type.cost_simple;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;

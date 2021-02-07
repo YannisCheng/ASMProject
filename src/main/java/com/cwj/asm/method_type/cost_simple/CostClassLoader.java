@@ -1,15 +1,9 @@
-package com.cwj.asm.cost_simple;
+package com.cwj.asm.method_type.cost_simple;
 
 
 import com.cwj.asm.class_type.MainClassOpCode;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
-import static org.objectweb.asm.Opcodes.*;
 
 /**
  * CostClassLoader  自定义类加载器
@@ -35,6 +29,6 @@ public class CostClassLoader extends ClassLoader {
         }
 
         // 该处的name值必须为：包名+类名
-        return defineClass("com.cwj.asm.cost_simple.TargetTest", bytes, 0, bytes.length);
+        return defineClass("com.cwj.asm.method_type.cost_simple.TargetTest", bytes, 0, bytes.length);
     }
 }

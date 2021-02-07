@@ -1,6 +1,6 @@
 package com.cwj.asm.class_type;
 
-import com.cwj.asm.cost_simple.ClassComputeCostAdapter;
+import com.cwj.asm.method_type.cost_simple.ClassComputeCostAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -37,7 +37,7 @@ public class MainClassOpCode {
         CheckClassAdapter checkClassAdapter = new CheckClassAdapter(classWriter);
         ClassComputeCostAdapter adapter = new ClassComputeCostAdapter(checkClassAdapter);
         // 该处的name值必须为：全限定名称，即：包名+类名
-        ClassReader reader = new ClassReader("com.cwj.asm.cost_simple.TargetTest");
+        ClassReader reader = new ClassReader("com.cwj.asm.method_type.cost_simple.TargetTest");
         reader.accept(adapter, 0);
         byte[] bytes = classWriter.toByteArray();
         // 该处的 writeToFile() 对 执行自定义ClassLoader没有任何影响，只是为了本地查看实际生成代码使用。

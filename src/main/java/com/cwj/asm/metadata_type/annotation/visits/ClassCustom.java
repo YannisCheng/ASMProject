@@ -1,25 +1,21 @@
-package com.cwj.asm.class_type;
+package com.cwj.asm.metadata_type.annotation.visits;
 
-import com.cwj.asm.metadata_type.annotation.visits.AnnotaCustom;
-import com.cwj.asm.metadata_type.annotation.visits.FieldCustom;
-import com.cwj.asm.metadata_type.annotation.visits.MethodCustom;
 import com.cwj.asm.utils.LogShowJ;
 import org.objectweb.asm.*;
 
 import static org.objectweb.asm.Opcodes.ASM6;
 
 /**
- * ASM Core API Class 整体分析
- */
-public class ClassPrinter extends ClassVisitor {
+ * ClassCustom  自定义ASM-ClassVisitor
+ *
+ * @author  wenjia.Cheng  cwj1714@163.com
+ * @date    2021/2/7 14:13
+*/
+public class ClassCustom extends ClassVisitor {
 
     private static final String TAG = "ClassVisitor ";
 
-    public ClassPrinter() {
-        super(ASM6);
-    }
-
-    public ClassPrinter(ClassVisitor cv) {
+    public ClassCustom(ClassVisitor cv) {
         super(ASM6, cv);
     }
 
