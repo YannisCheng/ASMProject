@@ -8,9 +8,9 @@ import static org.objectweb.asm.Opcodes.ASM6;
 /**
  * MethodCustom  自定义ASM-MethodVisitor
  *
- * @author  wenjia.Cheng  cwj1714@163.com
- * @date    2021/2/7 14:13
-*/
+ * @author wenjia.Cheng  cwj1714@163.com
+ * @date 2021/2/7 14:13
+ */
 public class MethodCustom extends MethodVisitor {
 
     private static final String TAG = "\n    ----> MethodVisitor ";
@@ -172,11 +172,22 @@ public class MethodCustom extends MethodVisitor {
     @Override
     public void visitLineNumber(int line, Label start) {
         super.visitLineNumber(line, start);
+        LogShowJ.showLog(TAG
+                        + String.format(" '源代码行号'：%d 在'字节码指令'中的映射为：%s%n", line, start.toString()),
+                true);
     }
 
     @Override
     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
         super.visitLocalVariable(name, desc, signature, start, end, index);
+        LogShowJ.showLog(TAG + String.format("源代码中局部变量名与字节码中局部变量槽之间的映射为：%n" +
+                        "源代码中局部变量名称：%s%n" +
+                        "源代码中局部变量名的描述：%s%n" +
+                        "源代码中局部变量的签名：%s%n" +
+                        "字节码的槽中标记开始：%s%n" +
+                        "字节码的槽中标记结束：%s%n" +
+                        "字节码的槽中局部变量的index为：%d%n", name, desc, signature, start.toString(), end.toString(), index),
+                true);
     }
 
     @Override

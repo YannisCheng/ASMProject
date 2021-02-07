@@ -6,6 +6,7 @@ import com.cwj.asm.metadata_type.annotation.visits.MethodCustom;
 import com.cwj.asm.utils.LogShowJ;
 import org.objectweb.asm.*;
 
+import static org.objectweb.asm.ClassReader.SKIP_CODE;
 import static org.objectweb.asm.Opcodes.ASM6;
 
 /**
