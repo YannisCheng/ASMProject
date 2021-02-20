@@ -101,7 +101,7 @@ class CustomTransform(val project: Project) : Transform() {
                                     val reader = ClassReader(classFile.readBytes())
                                     reader.accept(CustomClassVisitor(checkClassAdapter), 0)
                                     val toByteArray = classWriter.toByteArray()
-                                    writeToFile(classFile.name,toByteArray)
+                                    //writeToFile(classFile.name,toByteArray)
                                     if (toByteArray != null) {
                                         val file1 = File(classFile.absolutePath)
                                         if (file1.exists()) {

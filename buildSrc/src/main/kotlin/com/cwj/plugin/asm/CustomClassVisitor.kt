@@ -1,5 +1,6 @@
 package com.cwj.plugin.asm
 
+import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.ACC_INTERFACE
@@ -14,6 +15,8 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
 
     var isInterface: Boolean = false
     var className: String = "null"
+
+    var isIgnore = false;
 
     override fun visit(
         version: Int,
@@ -30,6 +33,15 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
         }
     }
 
+    override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor {
+        println("visible is : $visible, descriptor is $descriptor")
+        descriptor?.let {
+            isIgnore = descriptor.equals("Lcom/cwj/myapplication/sdk/IgnoreTraceMethodCostClass;")
+            println("isIgnore is $isIgnore")
+        }
+        return cv.visitAnnotation(descriptor, visible)
+    }
+
     override fun visitMethod(
         access: Int,
         name: String?,
@@ -38,7 +50,15 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
         exceptions: Array<out String>?
     ): MethodVisitor {
         var visitMethod = cv.visitMethod(access, name, descriptor, signature, exceptions)
-        if (!isInterface && visitMethod != null && !name.equals("<init>") && !name.equals("<clinit>") && name != null && descriptor != null) {
+
+        if (!isIgnore
+            && !isInterface
+            && visitMethod != null
+            && !name.equals("<init>")
+            && !name.equals("<clinit>")
+            && name != null
+            && descriptor != null
+        ) {
             visitMethod = NewCustomMethodVisitor(
                 visitMethod,
                 access,
