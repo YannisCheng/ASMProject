@@ -13,14 +13,16 @@ public class CostTimeAdviceAdapter extends AdviceAdapter {
 
     @Override
     protected void onMethodEnter() {
-        mv.visitVarInsn(ALOAD, 1);
-        mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/core_api/method_type/cost_simple/ComputeTargetCost", "startTime", "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/core_api/method_type/cost_simple/ComputeTargetCost", "startTime", "()V", false);
     }
 
     @Override
     protected void onMethodExit(int opcode) {
-        mv.visitVarInsn(ALOAD, 1);
-        mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/core_api/method_type/cost_simple/ComputeTargetCost", "stopTime", "(Ljava/lang/String;)V", false);
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitFieldInsn(GETFIELD,"com/cwj/asm/core_api/method_type/cost_simple/TargetTest","classN","Ljava/lang/String;");
+        mv.visitVarInsn(ALOAD,0);
+        mv.visitFieldInsn(GETFIELD, "com/cwj/asm/core_api/method_type/cost_simple/TargetTest","methodN","Ljava/lang/String;");
+        mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/core_api/method_type/cost_simple/ComputeTargetCost", "stopTime", "(Ljava/lang/String;Ljava/lang/String;)V", false);
     }
 
 
