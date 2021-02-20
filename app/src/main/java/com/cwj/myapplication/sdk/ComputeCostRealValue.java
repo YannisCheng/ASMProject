@@ -1,0 +1,23 @@
+package com.cwj.myapplication.sdk;
+
+/**
+ * ComputeCostRealValue  具体记录方法开始、结束时间点的类
+ *
+ * @author  wenjia.Cheng  cwj1714@163.com
+ * @date    2021/2/5 14:18
+*/
+public class ComputeCostRealValue {
+
+    private long startTime = 0L;
+
+    public void startValue() {
+        startTime = System.currentTimeMillis();
+        System.out.println("statTime is :" + startTime);
+    }
+
+    public void endValue(String className, String methodName) {
+        long endTime = System.currentTimeMillis();
+        System.out.println("endTime is :" + endTime);
+        System.out.printf("className is %s, method %s, cost time is : %d ms%n", className, methodName, (endTime - startTime));
+    }
+}

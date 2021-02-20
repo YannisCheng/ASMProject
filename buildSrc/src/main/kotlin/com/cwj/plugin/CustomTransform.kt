@@ -6,8 +6,16 @@ import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.cwj.plugin.DataConstant.PLUGIN_NAME
+import com.cwj.plugin.asm.CustomClassVisitor
+import org.apache.commons.compress.utils.IOUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.util.CheckClassAdapter
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 /**
  *
@@ -46,22 +54,18 @@ class CustomTransform(val project: Project) : Transform() {
 
     override fun transform(transformInvocation: TransformInvocation?) {
         super.transform(transformInvocation)
-        println("--> context is : ${transformInvocation?.context}")
-        println("--> referencedInputs is : ${transformInvocation?.referencedInputs}")
-        println("--> isIncremental is : ${transformInvocation?.isIncremental}")
-        println("--> outputProvider before is : ${transformInvocation?.outputProvider}")
+
         // 获取inputs
         val inputs = transformInvocation?.inputs
         // 遍历inputs，分2种
         inputs?.forEach { transformInput ->
-            println("==> transformInput is : $transformInput")
+            println("==> transformInput is : ${transformInput.directoryInputs}")
             run {
                 // 目录文件夹是我们的源代码和生成的R文件和BuildConfig文件等
                 transformInput.directoryInputs.forEach { directoryInput ->
 
                     run {
-                        println("## directoryInput is : $directoryInput")
-
+                        // 后续统一操作
                         val dest = transformInvocation.outputProvider.getContentLocation(
                             directoryInput.name + directoryInput.file.absoluteFile.hashCode(),
                             directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY
@@ -70,14 +74,55 @@ class CustomTransform(val project: Project) : Transform() {
                         // 将input的目录复制到output指定目录，
                         // 因为input一定要output，否则就丢失了(transform为链式的)
                         FileUtils.copyDirectory(directoryInput.file, dest)
+
+
+                        for (classFile in com.android.utils.FileUtils.getAllFiles(directoryInput.file)) {
+                            /**
+                             * directoryInput.file is : /Users/yannischeng/Android_MySelf/ASMProject/app/build/tmp/kotlin-classes/debug
+                             * classFile is : /Users/yannischeng/Android_MySelf/ASMProject/app/build/tmp/kotlin-classes/debug/META-INF/app_debug.kotlin_module
+                             *
+                             * directoryInput.file is : /Users/yannischeng/Android_MySelf/ASMProject/app/build/tmp/kotlin-classes/debug
+                             * classFile is : /Users/yannischeng/Android_MySelf/ASMProject/app/build/tmp/kotlin-classes/debug/com/cwj/myapplication/MainActivity.class
+                             * classFile.parent is : /Users/yannischeng/Android_MySelf/ASMProject/app/build/tmp/kotlin-classes/debug/com/cwj/myapplication
+                             * classFile.absolutePath : /Users/yannischeng/Android_MySelf/ASMProject/app/build/tmp/kotlin-classes/debug/com/cwj/myapplication/MainActivity.class
+                             * classFile.name : MainActivity.class
+                             */
+                            if (classFile.name.endsWith(".class")) {
+                                if (!classFile.absolutePath.contains("com/cwj/myapplication/sdk")) {
+                                    println("directoryInput.file is : ${directoryInput.file}")
+                                    println("classFile is : ${classFile}")
+                                    println("classFile.parent is : ${classFile.parent}")
+                                    println("classFile.absolutePath : ${classFile.absolutePath}")
+                                    println("classFile.name : ${classFile.name}")
+                                    println("classFile.path : ${classFile.path}")
+                                    println()
+                                    val classWriter = ClassWriter(0)
+                                    val checkClassAdapter = CheckClassAdapter(classWriter)
+                                    val reader = ClassReader(classFile.readBytes())
+                                    reader.accept(CustomClassVisitor(checkClassAdapter), 0)
+                                    val toByteArray = classWriter.toByteArray()
+                                    writeToFile(classFile.name,toByteArray)
+                                    if (toByteArray != null) {
+                                        val file1 = File(classFile.absolutePath)
+                                        if (file1.exists()) {
+                                            file1.delete()
+                                        }
+                                        file1.createNewFile()
+                                        val fileOutputStream = FileOutputStream(file1)
+                                        fileOutputStream.write(toByteArray)
+                                        IOUtils.closeQuietly(fileOutputStream)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                // jar文件一般就是依赖
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+                // jar文件一般就是依赖，该jar部分一定要处理，否则会导致找不到jar中的类
                 transformInput.jarInputs.forEach { jarInput ->
                     run {
-                        println("** jarInput is : $jarInput")
-
                         val dest = transformInvocation.outputProvider.getContentLocation(
                             jarInput.name + jarInput.file.absoluteFile.hashCode(),
                             jarInput.contentTypes, jarInput.scopes, Format.JAR
@@ -87,7 +132,35 @@ class CustomTransform(val project: Project) : Transform() {
                 }
             }
         }
-        println("--> outputProvider after is : ${transformInvocation?.outputProvider}")
+    }
+
+    fun path2ClassName(pathName: String):String {
+        return pathName.replace(File.separator, ".").replace(".class", "")
+    }
+
+    fun writeToFile(name: String, bytes: ByteArray?) {
+        try {
+            val file =
+                File("/Users/yannischeng/Android_MySelf/ASMProject/buildSrc/$name")
+            var outputStream: FileOutputStream? = null
+            if (file.exists()) {
+                if (file.delete()) {
+                    if (file.createNewFile()) {
+                        outputStream = FileOutputStream(file)
+                        outputStream.write(bytes)
+                    }
+                }
+            } else {
+                outputStream = FileOutputStream(file)
+                outputStream.write(bytes)
+            }
+            if (outputStream != null) {
+                outputStream.flush()
+                outputStream.close()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
 }

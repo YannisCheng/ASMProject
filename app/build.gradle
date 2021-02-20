@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'cwj.plugin'
 
-customExtensions{
+/*customExtensions{
     SWITCH_PLUGIN_OPEN = true
-}
+}*/
 
 android {
     compileSdkVersion 30
