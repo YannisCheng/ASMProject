@@ -30,6 +30,7 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
         cv.visit(version, access, name, signature, superName, interfaces)
         name?.let {
             className = name
+            println("ClassVisitor className is : $name")
         }
     }
 
@@ -49,6 +50,7 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
         signature: String?,
         exceptions: Array<out String>?
     ): MethodVisitor {
+        println("visitMethod methodName is : $name")
         var visitMethod = cv.visitMethod(access, name, descriptor, signature, exceptions)
 
         if (!isIgnore

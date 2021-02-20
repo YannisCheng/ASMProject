@@ -2,6 +2,7 @@ package com.cwj.plugin
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.api.ApplicationVariant
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
