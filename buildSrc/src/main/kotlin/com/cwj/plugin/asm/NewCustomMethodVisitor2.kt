@@ -6,6 +6,9 @@ import org.objectweb.asm.Opcodes.*
 
 
 /**
+ * NewCustomMethodVisitor2 插入方法开始、结束计时字节码
+ *
+ * 注意：此方法仅作为技术实现测试，具体的统计值存在问题，不要采用。
  *
  * @author  wenjia.Cheng  cwj1714@163.com
  * @date    2021/2/20
@@ -52,6 +55,9 @@ class NewCustomMethodVisitor2(
     override fun visitInsn(opcode: Int) {
         if (!isIgnore) {
             if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
+                mv.visitVarInsn(ALOAD, 0)
+                mv.visitLdcInsn(className + "&" + methodName)
+                mv.visitFieldInsn(PUTFIELD, className, localVar, "Ljava/lang/String;")
                 // 获取指定的局部 的值
                 mv.visitVarInsn(ALOAD, 0)
                 mv.visitFieldInsn(GETFIELD, className, localVar, "Ljava/lang/String;")

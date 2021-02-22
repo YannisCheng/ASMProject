@@ -61,7 +61,7 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
             && name != null
             && descriptor != null
         ) {
-            visitMethod = NewCustomMethodVisitor2(
+            visitMethod = NewCustomMethodVisitor(
                 visitMethod,
                 name,
                 className,

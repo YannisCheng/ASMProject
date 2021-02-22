@@ -31,7 +31,7 @@ class NewCustomMethodVisitor(
     override fun visitCode() {
         super.visitCode()
         if (!isIgnore) {
-            // 为局部变量 赋值
+            // 在方法进入时，重新设置 "类路径+当前方法名"
             mv.visitVarInsn(ALOAD, 0)
             mv.visitLdcInsn(className + "&" + methodName)
             mv.visitFieldInsn(PUTFIELD, className, localVar, "Ljava/lang/String;")
@@ -53,6 +53,7 @@ class NewCustomMethodVisitor(
     override fun visitInsn(opcode: Int) {
         if (!isIgnore) {
             if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
+                // 在方法退出时，重新设置 "类路径+当前方法名"
                 mv.visitVarInsn(ALOAD, 0)
                 mv.visitLdcInsn(className + "&" + methodName)
                 mv.visitFieldInsn(PUTFIELD, className, localVar, "Ljava/lang/String;")
