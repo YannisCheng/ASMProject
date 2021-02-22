@@ -11,11 +11,12 @@ public class ComputeTargetCost {
 
     private static final ComputeCostRealValue costCompute = new ComputeCostRealValue();
 
-    public static void startTime(){
-        costCompute.startValue();
+    public static void startTime(String keyStr){
+        costCompute.startValue(keyStr);
     }
-    public static void stopTime(String className, String methodName){
-        costCompute.endValue(className,methodName);
+    // com.sensorsdata.analytics.android.demo.activity.TestMainAdapter$onBindViewHolder$1&onClick
+    public static void stopTime(String keyStr){
+        costCompute.endValue(keyStr);
     }
 }
 

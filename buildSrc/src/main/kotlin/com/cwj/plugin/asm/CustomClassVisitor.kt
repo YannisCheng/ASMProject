@@ -3,8 +3,7 @@ package com.cwj.plugin.asm
 import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes.ACC_INTERFACE
-import org.objectweb.asm.Opcodes.ASM6
+import org.objectweb.asm.Opcodes.*
 
 /**
  *
@@ -15,6 +14,7 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
 
     var isInterface: Boolean = false
     var className: String = "null"
+    private val localVar = "Y_c23_N2_45_e34_$"
 
     var isIgnore = false;
 
@@ -63,12 +63,15 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
         ) {
             visitMethod = NewCustomMethodVisitor(
                 visitMethod,
-                access,
                 name,
-                descriptor,
-                className
+                className,
+                localVar
             )
         }
         return visitMethod
+    }
+
+    override fun visitEnd() {
+        cv.visitField(ACC_PRIVATE, localVar, "Ljava/lang/String;", null, className);
     }
 }

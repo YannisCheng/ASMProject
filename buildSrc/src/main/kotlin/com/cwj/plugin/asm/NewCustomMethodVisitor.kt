@@ -2,7 +2,8 @@ package com.cwj.plugin.asm
 
 import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.commons.AdviceAdapter
+import org.objectweb.asm.Opcodes.*
+
 
 /**
  *
@@ -11,11 +12,10 @@ import org.objectweb.asm.commons.AdviceAdapter
  */
 class NewCustomMethodVisitor(
     mv: MethodVisitor,
-    access: Int,
-    name: String,
-    descriptor: String,
-    val className: String
-) : AdviceAdapter(ASM6, mv, access, name, descriptor) {
+    val methodName: String,
+    val className: String,
+    val localVar: String
+) : MethodVisitor(ASM6, mv) {
 
     var isIgnore = false;
 
@@ -28,42 +28,42 @@ class NewCustomMethodVisitor(
         return mv.visitAnnotation(descriptor, visible)
     }
 
-    override fun onMethodEnter() {
+    override fun visitCode() {
+        super.visitCode()
         if (!isIgnore) {
+            // 为局部变量 赋值
+            mv.visitVarInsn(ALOAD, 0)
+            mv.visitLdcInsn(className + "&" + methodName)
+            mv.visitFieldInsn(PUTFIELD, className, localVar, "Ljava/lang/String;")
+            // 获取指定的局部 的值
+            mv.visitVarInsn(ALOAD, 0)
+            mv.visitFieldInsn(GETFIELD, className, localVar, "Ljava/lang/String;")
             mv.visitMethodInsn(
                 INVOKESTATIC,
                 "com/cwj/myapplication/sdk/ComputeTargetCost",
                 "startTime",
-                "()V",
+                "(Ljava/lang/String;)V",
                 false
             )
         }
-
     }
 
-    override fun onMethodExit(opcode: Int) {
+
+    override fun visitInsn(opcode: Int) {
         if (!isIgnore) {
-            mv.visitVarInsn(ALOAD, 0)
-            mv.visitFieldInsn(
-                GETFIELD,
-                "com/cwj/plugin/asm/CustomMethodVisitor",
-                "className",
-                "Ljava/lang/String;"
-            )
-            mv.visitVarInsn(ALOAD, 0)
-            mv.visitFieldInsn(
-                GETFIELD,
-                "com/cwj/plugin/asm/CustomMethodVisitor",
-                "name",
-                "Ljava/lang/String;"
-            )
-            mv.visitMethodInsn(
-                INVOKESTATIC,
-                "com/cwj/myapplication/sdk/ComputeTargetCost",
-                "stopTime",
-                "(Ljava/lang/String;Ljava/lang/String;)V",
-                false
-            )
+            if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
+                // 获取指定的局部 的值
+                mv.visitVarInsn(ALOAD, 0)
+                mv.visitFieldInsn(GETFIELD, className, localVar, "Ljava/lang/String;")
+                mv.visitMethodInsn(
+                    INVOKESTATIC,
+                    "com/cwj/myapplication/sdk/ComputeTargetCost",
+                    "stopTime",
+                    "(Ljava/lang/String;)V",
+                    false
+                )
+            }
         }
+        mv.visitInsn(opcode)
     }
 }

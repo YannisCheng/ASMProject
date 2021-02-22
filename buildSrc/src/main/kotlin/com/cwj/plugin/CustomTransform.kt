@@ -71,10 +71,6 @@ class CustomTransform(val project: Project) : Transform() {
                             directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY
                         )
 
-                        // 将input的目录复制到output指定目录，
-                        // 因为input一定要output，否则就丢失了(transform为链式的)
-                        FileUtils.copyDirectory(directoryInput.file, dest)
-
 
                         for (classFile in com.android.utils.FileUtils.getAllFiles(directoryInput.file)) {
                             /**
@@ -115,6 +111,10 @@ class CustomTransform(val project: Project) : Transform() {
                                 }
                             }
                         }
+
+                        // 将input的目录复制到output指定目录，
+                        // 因为input一定要output，否则就丢失了(transform为链式的)
+                        FileUtils.copyDirectory(directoryInput.file, dest)
                     }
                 }
 
