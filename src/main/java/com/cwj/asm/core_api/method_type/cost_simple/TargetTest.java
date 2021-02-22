@@ -7,6 +7,11 @@ package com.cwj.asm.core_api.method_type.cost_simple;
  * @date 2021/2/5 14:16
  */
 public class TargetTest {
+
+    /**
+     * 该字段存在的意义是与 "targetMethod()" 中的 System.out.println(temp);相对应。
+     * 因为如果在方法开始出进行了 "方法操作栈-局部变量index的修改"，那么在调用"temp"变量时就会发生异常：类校验错误
+     */
     private String temp = "temp_name";
 
     public void targetMethod() throws InterruptedException {
@@ -17,8 +22,12 @@ public class TargetTest {
         com.cwj.asm.core_api.method_type.cost_simple.ComputeTargetCost.startTime(classN);*/
         Thread.sleep(200);
         // 注意此处的temp的调用，是知识点：发生了 "aload_0" 内容替换。
-        //System.out.println(temp);
+        System.out.println(temp);
         //com.cwj.asm.core_api.method_type.cost_simple.ComputeTargetCost.stopTime(classN);
+    }
+
+    public void targetMethod2(){
+        System.out.println("method2");
     }
 }
 /*

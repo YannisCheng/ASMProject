@@ -12,7 +12,7 @@ public class ComputeTargetCost {
     private static final ComputeCostRealValue costCompute = new ComputeCostRealValue();
 
     public static void startTime(String methodN){
-        costCompute.startValue();
+        costCompute.startValue(methodN);
     }
     public static void stopTime(String className){
         costCompute.endValue(className);

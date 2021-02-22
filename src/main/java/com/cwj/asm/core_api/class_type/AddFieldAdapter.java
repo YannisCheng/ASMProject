@@ -13,6 +13,7 @@ public class AddFieldAdapter extends ClassVisitor {
     private String fName;
     private String fDesc;
     private boolean isFieldParent;
+    private String cName = "";
 
     public AddFieldAdapter() {
         super(ASM6);
@@ -23,6 +24,12 @@ public class AddFieldAdapter extends ClassVisitor {
         this.fAcc = mFAcc;
         this.fName = mFName;
         this.fDesc = mFDesc;
+    }
+
+    @Override
+    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+        super.visit(version, access, name, signature, superName, interfaces);
+        cName = name;
     }
 
     @Override
@@ -38,7 +45,7 @@ public class AddFieldAdapter extends ClassVisitor {
     public void visitEnd() {
         super.visitEnd();
         if (!isFieldParent) {
-            FieldVisitor fieldVisitor = cv.visitField(fAcc, fName, fDesc, null, null);
+            FieldVisitor fieldVisitor = cv.visitField(fAcc, fName, fDesc, null, "null");
             if (fieldVisitor != null) {
                 fieldVisitor.visitEnd();
             }

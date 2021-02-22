@@ -16,7 +16,7 @@ public class MainTest {
 //        MainClassOpCode.copyClass();
 //        MainClassOpCode.copyClass2();
 //        MainClassOpCode.removeMethodAndFiled();
-//        MainClassOpCode.addField();
+        MainClassOpCode.addField();
 //        MainClassOpCode.generatingClassWithTraceWithCheck();
 
 

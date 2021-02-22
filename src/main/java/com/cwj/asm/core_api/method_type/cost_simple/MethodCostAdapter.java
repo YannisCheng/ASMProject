@@ -12,14 +12,27 @@ import static org.objectweb.asm.Opcodes.*;
 */
 public class MethodCostAdapter extends MethodVisitor {
 
-    public MethodCostAdapter(MethodVisitor mv) {
+    private String tempName = "";
+    private String methodName = "";
+    private String localVar = "";
+
+    public MethodCostAdapter(MethodVisitor mv, String className, String name, String varName) {
         super(ASM6, mv);
+        this.tempName = className;
+        this.methodName = name;
+        this.localVar = varName;
     }
 
     @Override
     public void visitCode() {
-        mv.visitCode();
-        mv.visitVarInsn(ALOAD, 1);
+        super.visitCode();
+        // 为局部变量 赋值
+        mv.visitVarInsn(ALOAD,0);
+        mv.visitLdcInsn(tempName+"&"+methodName);
+        mv.visitFieldInsn(PUTFIELD,tempName,localVar,"Ljava/lang/String;");
+        // 获取指定的局部 的值
+        mv.visitVarInsn(ALOAD,0);
+        mv.visitFieldInsn(GETFIELD,tempName,localVar,"Ljava/lang/String;");
         mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/core_api/method_type/cost_simple/ComputeTargetCost", "startTime", "(Ljava/lang/String;)V", false);
     }
 
@@ -27,7 +40,9 @@ public class MethodCostAdapter extends MethodVisitor {
     @Override
     public void visitInsn(int opcode) {
         if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
-            mv.visitVarInsn(ALOAD, 1);
+            // 获取指定的局部 的值
+            mv.visitVarInsn(ALOAD,0);
+            mv.visitFieldInsn(GETFIELD,tempName,localVar,"Ljava/lang/String;");
             mv.visitMethodInsn(INVOKESTATIC, "com/cwj/asm/core_api/method_type/cost_simple/ComputeTargetCost", "stopTime", "(Ljava/lang/String;)V", false);
         }
         mv.visitInsn(opcode);

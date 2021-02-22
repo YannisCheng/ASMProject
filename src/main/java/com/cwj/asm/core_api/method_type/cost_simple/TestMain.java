@@ -18,7 +18,9 @@ public class TestMain {
         CostClassLoader myClassLoader = new CostClassLoader();
         Class<?> loadClass = myClassLoader.loadClass("TargetTest");
         Method method = loadClass.getDeclaredMethod("targetMethod", null);
+        Method method2 = loadClass.getDeclaredMethod("targetMethod2", null);
         Object ob = method.invoke(loadClass.newInstance(), null);
+        Object ob2 = method2.invoke(loadClass.newInstance(), null);
     }
 }
 
