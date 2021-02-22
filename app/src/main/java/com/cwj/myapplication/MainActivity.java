@@ -38,7 +38,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void jump(){
+        sayHello1();
         TextView textView2 = findViewById(R.id.tv_jump2);
         textView2.setOnClickListener(v -> startActivity(new Intent(MainActivity.this,KotlinActivity1.class)));
+    }
+
+    public void sayHello1(){
+        System.out.println("hello1");
+        sayHello2();
+    }
+    public void sayHello2(){
+        sayHello3();
+        System.out.println("hello2");
+    }
+    public void sayHello3(){
+        System.out.println("hello3");
     }
 }

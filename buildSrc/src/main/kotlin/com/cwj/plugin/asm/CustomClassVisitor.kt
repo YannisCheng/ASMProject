@@ -35,7 +35,7 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
     }
 
     override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor {
-        println("visible is : $visible, descriptor is $descriptor")
+        println("Annotation --> visible is : $visible, descriptor is $descriptor")
         descriptor?.let {
             isIgnore = descriptor.equals("Lcom/cwj/myapplication/sdk/IgnoreTraceMethodCostClass;")
             println("isIgnore is $isIgnore")
@@ -61,7 +61,7 @@ class CustomClassVisitor(cv: ClassVisitor) : ClassVisitor(ASM6, cv) {
             && name != null
             && descriptor != null
         ) {
-            visitMethod = NewCustomMethodVisitor(
+            visitMethod = NewCustomMethodVisitor2(
                 visitMethod,
                 name,
                 className,

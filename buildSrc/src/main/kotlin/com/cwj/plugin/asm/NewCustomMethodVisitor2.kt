@@ -10,7 +10,7 @@ import org.objectweb.asm.Opcodes.*
  * @author  wenjia.Cheng  cwj1714@163.com
  * @date    2021/2/20
  */
-class NewCustomMethodVisitor(
+class NewCustomMethodVisitor2(
     mv: MethodVisitor,
     val methodName: String,
     val className: String,
@@ -35,14 +35,13 @@ class NewCustomMethodVisitor(
             mv.visitVarInsn(ALOAD, 0)
             mv.visitLdcInsn(className + "&" + methodName)
             mv.visitFieldInsn(PUTFIELD, className, localVar, "Ljava/lang/String;")
-            mv.visitFieldInsn(GETSTATIC,"com/cwj/myapplication/sdk/MethodCostUtil","INSTANCE","Lcom/cwj/myapplication/sdk/MethodCostUtil;")
             // 获取指定的局部 的值
             mv.visitVarInsn(ALOAD, 0)
             mv.visitFieldInsn(GETFIELD, className, localVar, "Ljava/lang/String;")
             mv.visitMethodInsn(
-                INVOKEVIRTUAL,
-                "com/cwj/myapplication/sdk/MethodCostUtil",
-                "recodeStaticMethodCostStart",
+                INVOKESTATIC,
+                "com/cwj/myapplication/sdk/ComputeTargetCost",
+                "startTime",
                 "(Ljava/lang/String;)V",
                 false
             )
@@ -53,17 +52,13 @@ class NewCustomMethodVisitor(
     override fun visitInsn(opcode: Int) {
         if (!isIgnore) {
             if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
-                mv.visitVarInsn(ALOAD, 0)
-                mv.visitLdcInsn(className + "&" + methodName)
-                mv.visitFieldInsn(PUTFIELD, className, localVar, "Ljava/lang/String;")
                 // 获取指定的局部 的值
-                mv.visitFieldInsn(GETSTATIC,"com/cwj/myapplication/sdk/MethodCostUtil","INSTANCE","Lcom/cwj/myapplication/sdk/MethodCostUtil;")
                 mv.visitVarInsn(ALOAD, 0)
                 mv.visitFieldInsn(GETFIELD, className, localVar, "Ljava/lang/String;")
                 mv.visitMethodInsn(
-                    INVOKEVIRTUAL,
-                    "com/cwj/myapplication/sdk/MethodCostUtil",
-                    "recodeStaticMethodCostEnd",
+                    INVOKESTATIC,
+                    "com/cwj/myapplication/sdk/ComputeTargetCost",
+                    "stopTime",
                     "(Ljava/lang/String;)V",
                     false
                 )
