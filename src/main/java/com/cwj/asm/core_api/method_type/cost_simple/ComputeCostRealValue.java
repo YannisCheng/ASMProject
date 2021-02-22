@@ -15,9 +15,9 @@ public class ComputeCostRealValue {
         System.out.println("statTime is :" + startTime);
     }
 
-    public void endValue(String className, String methodName) {
+    public void endValue(String className) {
         long endTime = System.currentTimeMillis();
         System.out.println("endTime is :" + endTime);
-        System.out.printf("className is %s, method %s, cost time is : %d ms%n", className, methodName, (endTime - startTime));
+        System.out.printf("className is %s, cost time is : %d ms%n", className, (endTime - startTime));
     }
 }

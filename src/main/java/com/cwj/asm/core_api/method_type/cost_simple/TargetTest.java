@@ -7,17 +7,18 @@ package com.cwj.asm.core_api.method_type.cost_simple;
  * @date 2021/2/5 14:16
  */
 public class TargetTest {
-
-    String classN = "ComputeTargetCost";
-    String methodN = "targetMethod";
+    private String temp = "temp_name";
 
     public void targetMethod() throws InterruptedException {
         // 注意：在进行测试时，不能直接使用"ComputeTargetCost"。
         // 因为这样会导致找不到ComputeTargetCost类。
         // 应该以"全限定名称"的方式进行方法的调用。
-        //com.cwj.asm.core_api.method_type.cost_simple.ComputeTargetCost.startTime();
+        /*String classN = "ComputeTargetCost&targetMethod";
+        com.cwj.asm.core_api.method_type.cost_simple.ComputeTargetCost.startTime(classN);*/
         Thread.sleep(200);
-        //com.cwj.asm.core_api.method_type.cost_simple.ComputeTargetCost.stopTime(classN, methodN);
+        // 注意此处的temp的调用，是知识点：发生了 "aload_0" 内容替换。
+        //System.out.println(temp);
+        //com.cwj.asm.core_api.method_type.cost_simple.ComputeTargetCost.stopTime(classN);
     }
 }
 /*
