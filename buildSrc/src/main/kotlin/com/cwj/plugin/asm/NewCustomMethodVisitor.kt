@@ -66,4 +66,12 @@ class NewCustomMethodVisitor(
         }
         mv.visitInsn(opcode)
     }
+
+    /**
+     * 必须要给出修改后的操作数栈的大小，否则在某些情况下会发生：
+     * Error at instruction 1: Insufficient maximum stack size. onClick(Landroid/view/View;)V
+     */
+    override fun visitMaxs(maxStack: Int, maxLocals: Int) {
+        super.visitMaxs(maxStack + 2, maxLocals)
+    }
 }
